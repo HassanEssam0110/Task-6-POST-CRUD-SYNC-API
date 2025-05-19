@@ -54,6 +54,9 @@ src/
 │ └── index.d.ts
 └── app.ts
 
+server.ts
+package.json
+
 ---
 
 ## 🚀 Features
