@@ -6,68 +6,71 @@ A **Node.js** + **TypeScript** project that implements a complete CRUD API for m
 
 ## 📦 Project Structure
 
-├── database/
-│ └── seeders/
-│ │ └── seed-users.ts
-| └── models/
-│ │ ├── post.model.ts
-│ │ ├── user.model.ts
-│ │ └── roles.model.ts
-│ └── db-connect.ts
-├── src/
-│ ├── config/
-│ │ ├── .env.development.local
-│ │ ├── .env.production.local
-│ │ └── config.ts
-│ ├── scripts/
-│ │ └── syncPosts.ts
-│ ├── modules/
-│ │ └── post/
+database/
+├── seeders/
+│ └── seed-users.ts
+├── models/
+│ ├── post.model.ts
+│ ├── user.model.ts
+│ └── roles.model.ts
+└── db-connect.ts
+
+src/
+├── config/
+│ ├── .env.development.local
+│ ├── .env.production.local
+│ └── config.ts
+├── scripts/
+│ └── syncPosts.ts
+├── modules/
+│ ├── post/
 │ │ ├── post.controller.ts
 │ │ ├── post.schema.ts
 │ │ └── post.routes.ts
-│ │ └── auth/
+│ ├── auth/
 │ │ ├── auth.controller.ts
 │ │ ├── auth.schema.ts
 │ │ └── auth.routes.ts
-│ │ └── role/
+│ ├── role/
 │ │ ├── role.controller.ts
 │ │ ├── role.schema.ts
 │ │ └── role.routes.ts
-│ │ └── bootstrap.modules.ts
-│ ├── middlewares/
-│ │ ├── async-handler.middleware.ts
-│ │ ├── auth.middleware.ts
-│ │ ├── error-handler.middleware.ts
-│ │ ├── validation.middleware.ts
-│ │ └── index.middleware.ts
-│ ├── utils/
-│ │ ├── app-error.utils.ts
-│ │ ├── bycrpt.utils.ts
-│ │ ├── general-validation.utils.ts
-│ │ ├── jwt.utils.ts
-│ │ ├── roles-system.utils.ts
-│ │ └── index.utils.ts
-│ ├── types/
-│ │ ├── express/
-│ │ └── index.d.ts
-│ └── app.ts
-├── server.ts
-├── package.json
+│ └── bootstrap.modules.ts
+├── middlewares/
+│ ├── async-handler.middleware.ts
+│ ├── auth.middleware.ts
+│ ├── error-handler.middleware.ts
+│ ├── validation.middleware.ts
+│ └── index.middleware.ts
+├── utils/
+│ ├── app-error.utils.ts
+│ ├── bcrypt.utils.ts
+│ ├── general-validation.utils.ts
+│ ├── jwt.utils.ts
+│ ├── roles-system.utils.ts
+│ └── index.utils.ts
+├── types/
+│ ├── express/
+│ └── index.d.ts
+└── app.ts
+
+---
 
 ## 🚀 Features
 
-✅ Full **CRUD API** for posts
-✅ **Role-based access control** (`Admin`, `Reviewer`)
-✅ **Post approval** endpoint
-✅ **Validation** with Joi
-✅ **Authentication** using JWT
-✅ **MongoDB** integration using **Mongoose**\
-✅ **Environment-based configuration** support\
-✅ **Centralized error handling** for better debugging
-Scripts for:
-✅ **Seeding users**
-✅ **Syncing external posts**
+- ✅ Full **CRUD API** for posts
+- ✅ **Role-based access control** (`Admin`, `Reviewer`)
+- ✅ **Post approval** endpoint
+- ✅ **Validation** with Joi
+- ✅ **Authentication** using JWT
+- ✅ **MongoDB** integration using **Mongoose**
+- ✅ **Environment-based configuration** support
+- ✅ **Centralized error handling** for better debugging
+
+### Scripts
+
+- ✅ Seed users (`seed-users`)
+- ✅ Sync external posts (`sync-posts`)
 
 ---
 
