@@ -1,0 +1,413 @@
+{
+	"info": {
+		"_postman_id": "a4333ab5-67c4-48f3-9269-017ba1503d7d",
+		"name": "Task 6 CRUD for Posts with Sync Command",
+		"description": "CRUD system for posts with a command line tool to sync posts from an external API and approval by users with the \"review\" role.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24851140",
+		"_collection_link": "https://crimson-desert-446143.postman.co/workspace/Team-Workspace~572b3c87-781f-4db3-8e72-fb0adf25a725/collection/24851140-a4333ab5-67c4-48f3-9269-017ba1503d7d?action=share&source=collection_link&creator=24851140"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Signup",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"JWT\",pm.response.json().token)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n     \"username\":\"reviewer\",\r\n     \"password\":\"Asd@@123\",\r\n     \"repeatPassword\":\"Asd@@123\",\r\n     \"role\":\"Reviewer\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/signup",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"signup"
+							]
+						},
+						"description": "This endpoint allows users to sign up by creating a new account with the provided credentials. The request should be sent to {{URL}}/api/v1/auth/signup using an HTTP POST method.\n\n### Request Body\n\n- username (string, required): The username for the new account.\n    \n- password (string, required): The password for the new account.\n    \n- repeatPassword (string, required): Repeat of the password for confirmation.\n    \n- role (string): The role of the user, e.g., \"Reviewer\".\n    \n\n### Response\n\nThe response to the request will have a status code of 201 and a Content-Type of application/json. The response body will be in JSON format and will contain the following fields:\n\n- message (string): A message related to the signup process, if any.\n    \n- token (string): The token generated for the newly created account.\n    \n\n### JSON Schema for Response\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"message\": {\n            \"type\": \"string\"\n        },\n        \"token\": {\n            \"type\": \"string\"\n        }\n    }\n}\n\n ```\n\nThis endpoint allows users to sign up by providing their username, password, repeat password, and role.\n\n**Request Body**\n\n- `username` (string) - The username of the user.\n    \n- `password` (string) - The password for the account.\n    \n- `repeatPassword` (string) - The repeated password for confirmation.\n    \n- `role` (string) - The role of the user.\n    \n\n**Response**\n\n- Status: 201\n    \n- Content-Type: application/json\n    \n- `message` (string) - A message indicating the result of the sign up process.\n    \n- `token` (string) - The authentication token for the newly created user."
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"JWT\", pm.response.json().token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n      \"username\":\"reviewer\",\r\n     \"password\":\"Asd@@123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/auth/login",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						},
+						"description": "### Auth Login\n\nThis endpoint allows users to log in and obtain an authentication token.\n\n#### Request Body\n\n- `username` (string): The username of the user.\n    \n- `password` (string): The password of the user.\n    \n\n#### Response\n\nUpon a successful login, the server responds with a status code of 200 and a JSON object containing:\n\n- `message` (string): A message indicating the result of the login attempt.\n    \n- `token` (string): An authentication token for the user."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Logged User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "Bearer {{JWT}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/auth/me",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"me"
+							]
+						},
+						"description": "This endpoint makes an HTTP GET request to retrieve the authenticated user's information.\n\n### Request\n\nNo request body is required for this endpoint.\n\n### Response\n\n- Status: 200 OK\n    \n- Content-Type: application/json\n    \n\nThe response will include the authenticated user's details in a JSON format, including the user's ID, username, role, creation date, update date, and version."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Post",
+			"item": [
+				{
+					"name": "Get All Posts Approved",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/posts/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Post By ID Approved",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/posts/682ae214fb3436e4c3420f5a",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"682ae214fb3436e4c3420f5a"
+							]
+						},
+						"description": "### Retrieve a specific post Approved (public)\n\nThis endpoint retrieves a specific post identified by the provided post ID.\n\n#### Request\n\nThis is a simple GET request that does not require a request body.\n\n#### Response\n\nThe response will be in JSON format with the following schema:\n\n``` json\n{\n    \"post\": {\n        \"_id\": \"string\",\n        \"title\": \"string\",\n        \"body\": \"string\",\n        \"approved\": true,\n        \"createdAt\": \"string\",\n        \"updatedAt\": \"string\",\n        \"__v\": 0\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Posts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/posts/all",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"all"
+							]
+						},
+						"description": "### Retrieve a list of all posts (Admin, Reviewer).\n\nThis endpoint retrieves all the posts.\n\n#### Request\n\nThis is a simple GET request that does not require a request body.\n\n#### Response\n\nThe response will be in JSON format with the following schema:\n\n``` json\n{\n    \"posts\": [\n        {\n            \"_id\": \"string\",\n            \"title\": \"string\",\n            \"body\": \"string\",\n            \"approved\": false,\n            \"createdAt\": \"string\",\n            \"updatedAt\": \"string\",\n            \"__v\": 0\n        }\n    ]\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"title\": \"Third Post\",\r\n  \"body\": \"This is a simple message in the body of the third post.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/posts/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								""
+							]
+						},
+						"description": "# Create a New Post (Admin only)\n\nThis endpoint allows you to create a new post.\n\n## Request\n\n- Method: POST\n    \n- URL: `http://127.0.0.1:3000/api/v1/posts/`\n    \n- Headers:\n    \n    - Content-Type: application/json\n        \n- { \"title\": \"test post\", \"body\": \"test body post\" }\n    \n\n## Response\n\n- Status: 201 Created\n    \n- Headers:\n    \n    - Content-Type: application/json\n        \n- { \"message\": \"\", \"post\": { \"title\": \"\", \"body\": \"\", \"approved\": true, \"_id\": \"\", \"createdAt\": \"\", \"updatedAt\": \"\", \"__v\": 0 } }\n    \n\nThe response will contain the newly created post with its unique identifier, creation and update timestamps, and approval status.\n\nThis endpoint is used to create a new post.\n\n#### Request\n\n- Method: POST\n    \n- URL: `http://127.0.0.1:3000/api/v1/posts/`\n    \n- Body:\n    \n    - title (text, required): The title of the post.\n        \n    - body (text, required): The body content of the post.\n        \n\n#### Response\n\nThe response is in JSON format with the following schema:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"message\": {\n      \"type\": \"string\"\n    },\n    \"post\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"title\": {\n          \"type\": \"string\"\n        },\n        \"body\": {\n          \"type\": \"string\"\n        },\n        \"approved\": {\n          \"type\": \"boolean\"\n        },\n        \"_id\": {\n          \"type\": \"string\"\n        },\n        \"createdAt\": {\n          \"type\": \"string\"\n        },\n        \"updatedAt\": {\n          \"type\": \"string\"\n        },\n        \"__v\": {\n          \"type\": \"integer\"\n        }\n      }\n    }\n  }\n}\n\n ```\n\n- Status: 201 Created\n    \n- Content-Type: application/json"
+					},
+					"response": []
+				},
+				{
+					"name": "Approve Post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/posts/682ae214fb3436e4c3420f5a/approve",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"682ae214fb3436e4c3420f5a",
+								"approve"
+							]
+						},
+						"description": "### Approve Post (Reviewer only)\n\nThis endpoint allows you to approve an existing post with a specific identifier.\n\n#### Request\n\n- Method: POST\n    \n- URL: `http://127.0.0.1:3000/api/v1/posts/682ae214fb3436e4c3420f5a/approve`\n    \n- Headers:\n    \n    - Content-Type: application/json\n        \n\n#### Response\n\nThe response is in JSON format with the following schema:\n\n``` json\n{\n  \"message\": {\n    \"type\": \"string\"\n  },\n  \"post\": {\n    \"title\": {\n      \"type\": \"string\"\n    },\n    \"body\": {\n      \"type\": \"string\"\n    },\n    \"approved\": {\n      \"type\": \"boolean\"\n    },\n    \"_id\": {\n      \"type\": \"string\"\n    },\n    \"createdAt\": {\n      \"type\": \"string\"\n    },\n    \"updatedAt\": {\n      \"type\": \"string\"\n    },\n    \"__v\": {\n      \"type\": \"integer\"\n    }\n  }\n}\n\n ```\n\n- Status: 200 OK\n    \n- Content-Type: application/json"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Post",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\":\"update title post\",\r\n    \"body\":\"update test post\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/posts/682ade1d5ad1a98e979331ff",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"682ade1d5ad1a98e979331ff"
+							]
+						},
+						"description": "## Update Post (Admin only)\n\nThis endpoint allows you to update an existing post with a specific identifier.\n\n  \nRequest\n\n- Method: PUT\n    \n- URL: `http://127.0.0.1:3000/api/v1/posts/682ade1d5ad1a98e979331ff`\n    \n- Headers:\n    \n    - Content-Type: application/json\n        \n- Body:\n    \n    - title (text, optional): The updated title of the post.\n        \n    - body (text, optional): The updated body content of the post.\n        \n\n## Response\n\nThe response is in JSON format with the following schema:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"message\": {\n      \"type\": \"string\"\n    },\n    \"post\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"title\": {\n          \"type\": \"string\"\n        },\n        \"body\": {\n          \"type\": \"string\"\n        },\n        \"approved\": {\n          \"type\": \"boolean\"\n        },\n        \"_id\": {\n          \"type\": \"string\"\n        },\n        \"createdAt\": {\n          \"type\": \"string\"\n        },\n        \"updatedAt\": {\n          \"type\": \"string\"\n        },\n        \"__v\": {\n          \"type\": \"integer\"\n        }\n      }\n    }\n  }\n}\n- Status: 200 OK\n- Content-Type: application/json\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Post",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/posts/682ae118b0a78b165a8928ef",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"682ae118b0a78b165a8928ef"
+							]
+						},
+						"description": "## Update Post (Admin only)\n\nThis endpoint allows you to update an existing post with a specific identifier.\n\n  \nRequest\n\n- Method: PUT\n    \n- URL: `http://127.0.0.1:3000/api/v1/posts/682ade1d5ad1a98e979331ff`\n    \n- Headers:\n    \n    - Content-Type: application/json\n        \n- Body:\n    \n    - title (text, optional): The updated title of the post.\n        \n    - body (text, optional): The updated body content of the post.\n        \n\n## Response\n\nThe response is in JSON format with the following schema:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"message\": {\n      \"type\": \"string\"\n    },\n    \"post\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"title\": {\n          \"type\": \"string\"\n        },\n        \"body\": {\n          \"type\": \"string\"\n        },\n        \"approved\": {\n          \"type\": \"boolean\"\n        },\n        \"_id\": {\n          \"type\": \"string\"\n        },\n        \"createdAt\": {\n          \"type\": \"string\"\n        },\n        \"updatedAt\": {\n          \"type\": \"string\"\n        },\n        \"__v\": {\n          \"type\": \"integer\"\n        }\n      }\n    }\n  }\n}\n- Status: 200 OK\n- Content-Type: application/json\n\n ```"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "JWT",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "URL",
+			"value": "http://127.0.0.1:3000",
+			"type": "string"
+		}
+	]
+}
